@@ -1,4 +1,4 @@
-.business-section {
+.service-section {
   width: 100%;
   padding: 60px 20px;
   box-sizing: border-box;
@@ -8,7 +8,7 @@
   align-items: center;
 }
 
-.business-title {
+.service-title {
   font-size: 42px;
   font-weight: 700;
   color: #181c23;
@@ -20,7 +20,7 @@
   width: 100%;
 }
 
-.business-title-line {
+.service-title-line {
   display: inline-block;
   width: 60px;
   height: 6px;
@@ -30,7 +30,7 @@
   transform: translateY(-6px);
 }
 
-.business-table {
+.service-table {
   width: 100%;
   max-width: 1200px;
   border-collapse: collapse;
@@ -40,13 +40,13 @@
   overflow: hidden;
 }
 
-.business-table thead {
+.service-table thead {
   background: #f0f0f0;
   font-weight: 700;
   color: #181c23;
 }
 
-.business-table th {
+.service-table th {
   padding: 20px;
   text-align: left;
   font-size: 16px;
@@ -55,53 +55,74 @@
   border-bottom: 1px solid #e0e0e0;
 }
 
-.business-table tbody tr {
+.service-table tbody tr {
   border-bottom: 1px solid #e0e0e0;
   transition: background 0.2s ease;
 }
 
-.business-table tbody tr:last-child {
+.service-table tbody tr:last-child {
   border-bottom: none;
 }
 
-.business-table tbody tr:nth-child(even) {
+.service-table tbody tr:nth-child(even) {
   background: #f9f9f9;
 }
 
-.business-table tbody tr:hover {
+.service-table tbody tr:hover {
   background: #f0f8ff;
 }
 
-.business-table td {
+.service-table td {
   padding: 20px;
   font-size: 16px;
   color: #181c23;
   font-family: Arial, sans-serif;
 }
 
-.business-note {
-  margin-top: 20px;
-  font-size: 14px;
-  color: #666;
-  font-family: Arial, sans-serif;
+.service-name {
+  font-weight: 600;
+}
+
+.service-price {
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+.service-description {
+  color: #555;
+}
+
+@media (max-width: 1024px) {
+  .service-table {
+    font-size: 14px;
+  }
+
+  .service-table th,
+  .service-table td {
+    padding: 15px;
+  }
 }
 
 @media (max-width: 768px) {
-  .business-section {
+  .service-section {
     padding: 40px 20px;
   }
 
-  .business-title {
+  .service-title {
     font-size: 32px;
     margin-bottom: 30px;
   }
 
-  .business-table {
-    font-size: 14px;
+  .service-table {
+    font-size: 13px;
   }
 
-  .business-table th,
-  .business-table td {
-    padding: 15px 10px;
+  .service-table th,
+  .service-table td {
+    padding: 12px 10px;
+  }
+
+  .service-description {
+    font-size: 12px;
   }
 }

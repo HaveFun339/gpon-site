@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./Medium.css";
 import ConnectionFormSection from "../../components/connection-form-section/ConnectionFormSection.jsx";
 import  Mapa  from "../map/Mapa.jsx";
-
+import { Input } from "../input/Input.jsx";
 const TariffCard = ({
   name,
   speed,
@@ -137,7 +137,8 @@ export const Medium = () => (
       <span className="medium-phone-icon" />
     </div>
     <Mapa/>
-    <ConnectionFormSection />
+    {/* <ConnectionFormSection /> */}
+    <Input/>
   </section>
 );
 

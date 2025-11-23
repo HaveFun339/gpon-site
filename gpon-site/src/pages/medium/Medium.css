@@ -1,4 +1,4 @@
-
+﻿
 .medium-section {
 
   background: #181c23 url('./public/gpon-bg.jpg') center center/cover no-repeat;
@@ -13,9 +13,11 @@
 
 }
 .medium-bg {
+   background: #181c23 url('./public/gpon-bg.jpg') center center/cover no-repeat;
   width: 100%;
 padding-top: 60px;
 background-size: cover;
+background-repeat: none;
 }
 span{
     color:black;
@@ -45,12 +47,12 @@ span{
   border-radius: 18px;
   box-shadow: 0 4px 32px rgba(0,0,0,0.10);
   width: 370px;
- 
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   position: relative;
   overflow: hidden;
+  padding: 0;
 }
 
 .medium-card-header {
@@ -200,6 +202,41 @@ span{
 
 }
 
+/* --- Негайний білий блок після помаранчевої лінії для мобільних --- */
+@media (max-width: 600px) {
+  .medium-bottom-line {
+    height: 6px !important;
+    width: 100%;
+    background: #e88a00 !important;
+    position: relative !important;
+    top: 0 !important;
+    margin: 0 !important;
+    z-index: 6 !important; /* поверх білого блоку */
+  }
+
+  .medium-conditions {
+    margin-top: 0 !important;
+    background: transparent !important;
+    padding-top: 0 !important;
+  }
+
+  .medium-conditions-inner {
+    background: #fff !important;
+    margin-top: -6px !important; /* підняти щоб торкатися лінії */
+    padding-top: 18px !important;
+    padding-bottom: 18px !important;
+    box-sizing: border-box !important;
+    border-radius: 12px !important;
+    z-index: 1 !important;
+  }
+
+  /* Якщо кнопка в картці має великий радіус, зменшимо падінг щоб лінія була видна */
+  .medium-card-btn {
+    border-bottom-left-radius: 8px !important;
+    border-bottom-right-radius: 8px !important;
+  }
+}
+
 .medium-conditions {
   width: 100%;
   display: flex;
@@ -217,6 +254,8 @@ span{
   padding: 24px 32px;
   max-width: 900px;
   width: 100%;
+  box-sizing: border-box;
+  margin: 0 auto;
 }
 
 .medium-conditions-text {
@@ -260,17 +299,623 @@ span{
   background-size: 36px 36px;
 }
 
-@media (max-width: 900px) {
+/* Таблети 1200px → 1024px */
+@media (max-width: 1200px) {
+  .medium-cards {
+    gap: 50px;
+  }
+
+  .medium-card {
+    width: 340px;
+  }
+
+  .medium-title {
+    font-size: 48px;
+  }
+}
+
+/* Таблети 1024px → 768px */
+@media (max-width: 1024px) {
+  .medium-pad {
+    padding: 18px 12px 0 12px;
+  }
+
+  /* На телефонах показуємо градієнт — зверху темний фон з фото, знизу білий */
+  .medium-bg {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    background-image: linear-gradient(180deg, rgba(24,28,35,0.98) 0%, rgba(24,28,35,0.98) 62%, rgba(255,255,255,1) 62%), url('./public/gpon-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #181c23;
+  }
+
+  .medium-title {
+    font-size: 40px;
+    margin-bottom: 32px;
+  }
+
   .medium-cards {
     flex-direction: column;
-    gap: 32px;
+    gap: 20px;
     align-items: center;
   }
-  .medium-section {
 
+  .medium-card {
+    width: 100%;
+    max-width: 380px;
   }
+
+  .medium-card-title {
+    font-size: 20px;
+  }
+
+  .medium-card-row {
+    font-size: 15px;
+  }
+
+  .medium-phone {
+    left: 20px;
+    bottom: 20px;
+  }
+
+  .medium-phone-icon {
+    width: 60px;
+    height: 60px;
+    background-size: 32px 32px;
+  }
+
+  .medium-conditions {
+    margin-top: 32px;
+  }
+
+  .medium-conditions-inner {
+    padding: 20px 28px;
+  }
+
+  .medium-conditions-text {
+    font-size: 15px;
+  }
+
+  .medium-conditions-title {
+    font-size: 17px;
+  }
+
+  .medium-conditions ul {
+    font-size: 14px;
+  }
+}
+
+/* Великі телефони/малі таблети 768px → 600px */
+@media (max-width: 768px) {
+  .medium-pad {
+    padding: 24px 16px 0 16px;
+  }
+
+  .medium-bg {
+    padding-top: 32px;
+    padding-bottom: 32px;
+  }
+
+  .medium-title {
+    font-size: 32px;
+    margin-bottom: 24px;
+  }
+
+  .medium-cards {
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+  }
+
+  .medium-card {
+    width: calc(100% - 32px);
+    max-width: 380px;
+  }
+
+  .medium-card-title {
+    font-size: 18px;
+  }
+
+  .medium-card-discount {
+    font-size: 16px;
+  }
+
+  .medium-card-divider {
+    width: 40px;
+  }
+
+  .medium-card-row {
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+
+  .medium-card-price {
+    font-size: 19px;
+  }
+
+  .medium-card-desc {
+    font-size: 12px;
+  }
+
+  .medium-card-btn {
+    height: 44px;
+    font-size: 15px;
+  }
+
+  .medium-switch {
+    width: 45px;
+    height: 26px;
+  }
+
+  .medium-switch-slider:before {
+    width: 18px;
+    height: 18px;
+    left: 4px;
+    top: 4px;
+  }
+
+  .medium-switch input:checked + .medium-switch-slider:before {
+    left: 23px;
+  }
+
   .medium-phone {
     left: 16px;
-    bottom: 16px;   
-    }   
+    bottom: 16px;
+  }
+
+  .medium-phone-icon {
+    width: 54px;
+    height: 54px;
+    background-size: 28px 28px;
+  }
+
+  .medium-conditions {
+    margin: 24px 16px 0 16px;
+  }
+
+  .medium-conditions-inner {
+    padding: 16px 20px;
+    border-radius: 8px;
+  }
+
+  .medium-conditions-text {
+    font-size: 13px;
+    line-height: 1.45;
+  }
+
+  .medium-conditions-title {
+    font-size: 15px;
+    margin-top: 8px;
+  }
+
+  .medium-conditions ul {
+    font-size: 12px;
+    padding-left: 16px;
+  }
+
+  .medium-bottom-line {
+/* Телефони: відразу білий фон після помаранчевої лінії */
+@media (max-width: 600px) {
+  .medium-bg {
+    position: relative;
+  }
+
+  .medium-bottom-line {
+    height: 6px;
+    width: 100%;
+    background: #e88a00;
+    position: relative;
+    z-index: 5; /* поверх білого блоку */
+    margin: 0; /* прибираємо зайві відступи */
+  }
+
+  /* прибираємо відступ між лінією і умовами */
+  .medium-conditions {
+    margin-top: 0;
+    background: transparent;
+    padding-top: 0;
+  }
+
+  /* піднімаємо білий блок вгору, щоб він торкався лінії */
+  .medium-conditions-inner {
+    background: #fff;
+    margin-top: -6px; /* піднімаємо на висоту лінії */
+    padding-top: 18px; /* трохи внутрішнього простору */
+    box-sizing: border-box;
+    border-radius: 12px 12px 12px 12px;
+    z-index: 1;
+  }
+}
+
+    top: 24px;
+  }
+}
+
+/* Середні телефони 600px → 480px */
+@media (max-width: 600px) {
+  .medium-pad {
+    padding: 12px 12px 0 12px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .medium-bg {
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+
+  .medium-title {
+    font-size: 26px;
+    margin-bottom: 18px;
+    line-height: 1.25;
+    padding: 0 12px;
+  }
+
+  .medium-cards {
+    gap: 10px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 8px;
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  .medium-card {
+    width: calc(100vw - 24px);
+    max-width: none;
+    flex-shrink: 0;
+    border-radius: 12px;
+    scroll-snap-align: start;
+    background: rgba(255,255,255,0.93);
+  }
+
+  .medium-card-title {
+    font-size: 16px;
+  }
+
+  .medium-card-discount {
+    font-size: 14px;
+  }
+
+  .medium-card-divider {
+    width: 36px;
+    height: 3px;
+    margin: 10px 0 14px 0;
+  }
+
+  .medium-card-row {
+    font-size: 13px;
+    margin-bottom: 7px;
+  }
+
+  .medium-card-price {
+    font-size: 17px;
+    margin: 10px 0 4px 0;
+  }
+
+  .medium-card-desc {
+    font-size: 11px;
+    margin-bottom: 16px;
+  }
+
+  .medium-card-btn {
+    height: 40px;
+    font-size: 14px;
+    border-radius: 0 0 12px 12px;
+  }
+
+  .medium-switch {
+    width: 42px;
+    height: 24px;
+  }
+
+  .medium-switch-slider:before {
+    width: 17px;
+    height: 17px;
+    left: 3px;
+    top: 3px;
+  }
+
+  .medium-switch input:checked + .medium-switch-slider:before {
+    left: 21px;
+  }
+
+  .medium-phone {
+    left: 12px;
+    bottom: 12px;
+  }
+
+  .medium-phone-icon {
+    width: 48px;
+    height: 48px;
+    background-size: 24px 24px;
+  }
+
+  .medium-conditions {
+    margin: 16px 12px 0 12px;
+  }
+
+  .medium-conditions-inner {
+    padding: 12px 16px;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.93);
+  }
+
+  .medium-conditions-text {
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
+  .medium-conditions-title {
+    font-size: 13px;
+    margin-top: 6px;
+  }
+
+  .medium-conditions ul {
+    font-size: 11px;
+    padding-left: 14px;
+    margin: 4px 0 0 0;
+  }
+
+  /* зробити щоб помаранчева лінія була на краю темної секції */
+  .medium-bottom-line {
+    height: 6px;
+    top: 0;
+    position: relative;
+    z-index: 2;
+    margin-top: 8px;
+  }
+
+  /* прибираємо відступ між лінією і умовами — фон умов буде білий */
+  .medium-conditions {
+    margin-top: 0;
+    background: transparent;
+  }
+
+  .medium-conditions-inner {
+    background: #fff;
+    margin-top: 0;
+  }
+}
+
+/* Малі телефони 480px → 360px */
+@media (max-width: 480px) {
+  .medium-pad {
+    padding: 14px 10px 0 10px;
+  }
+
+  .medium-bg {
+    padding-top: 16px;
+    padding-bottom: 16px;
+  }
+
+  .medium-title {
+    font-size: 22px;
+    margin-bottom: 14px;
+  }
+
+  .medium-cards {
+    gap: 8px;
+  }
+
+  .medium-card {
+    width: calc(100vw - 30px);
+    border-radius: 8px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+    background: rgba(255,255,255,0.93);
+  }
+
+  .medium-card-title {
+    font-size: 15px;
+  }
+
+  .medium-card-discount {
+    font-size: 13px;
+  }
+
+  .medium-card-divider {
+    width: 32px;
+    height: 2px;
+    margin: 8px 0 10px 0;
+  }
+
+  .medium-card-row {
+    font-size: 12px;
+    margin-bottom: 5px;
+  }
+
+  .medium-card-price {
+    font-size: 15px;
+    margin: 8px 0 3px 0;
+  }
+
+  .medium-card-desc {
+    font-size: 10px;
+    margin-bottom: 12px;
+  }
+
+  .medium-card-btn {
+    height: 38px;
+    font-size: 12px;
+    border-radius: 0 0 8px 8px;
+  }
+
+  .medium-switch {
+    width: 40px;
+    height: 22px;
+  }
+
+  .medium-switch-slider:before {
+    width: 16px;
+    height: 16px;
+    left: 2px;
+    top: 2px;
+  }
+
+  .medium-switch input:checked + .medium-switch-slider:before {
+    left: 20px;
+  }
+
+  .medium-phone {
+    left: 8px;
+    bottom: 8px;
+  }
+
+  .medium-phone-icon {
+    width: 44px;
+    height: 44px;
+    background-size: 20px 20px;
+  }
+
+  .medium-conditions {
+    margin: 12px 10px 0 10px;
+  }
+
+  .medium-conditions-inner {
+    padding: 10px 10px ;
+    border-radius: 4px;
+    background: rgba(255,255,255,0.93);
+  }
+
+  .medium-conditions-text {
+    font-size: 11px;
+    line-height: 1.35;
+  }
+
+  .medium-conditions-title {
+    font-size: 12px;
+    margin-top: 5px;
+  }
+
+  .medium-conditions ul {
+    font-size: 10px;
+    padding-left: 12px;
+    margin: 3px 0 0 0;
+  }
+
+  .medium-bottom-line {
+    height: 3px;
+    top: 12px;
+  }
+}
+
+/* Мікро телефони 360px і менше */
+@media (max-width: 360px) {
+  .medium-pad {
+    padding: 12px 8px 0 8px;
+  }
+
+  .medium-bg {
+    padding-top: 14px;
+    padding-bottom: 14px;
+  }
+
+  .medium-title {
+    font-size: 20px;
+    margin-bottom: 12px;
+  }
+
+  .medium-cards {
+    gap: 6px;
+  }
+
+  .medium-card {
+    width: calc(100vw - 24px);
+    border-radius: 8px;
+    background: rgba(255,255,255,0.93);
+  }
+
+  .medium-card-title {
+    font-size: 14px;
+  }
+
+  .medium-card-discount {
+    font-size: 12px;
+  }
+
+  .medium-card-divider {
+    width: 28px;
+    height: 2px;
+    margin: 7px 0 8px 0;
+  }
+
+  .medium-card-row {
+    font-size: 11px;
+    margin-bottom: 4px;
+  }
+
+  .medium-card-price {
+    font-size: 13px;
+    margin: 7px 0 2px 0;
+  }
+
+  .medium-card-desc {
+    font-size: 9px;
+    margin-bottom: 10px;
+  }
+
+  .medium-card-btn {
+    height: 35px;
+    font-size: 11px;
+    border-radius: 0 0 8px 8px;
+  }
+
+  .medium-card-row s {
+    font-size: 10px;
+  }
+
+  .medium-switch {
+    width: 38px;
+    height: 20px;
+  }
+
+  .medium-switch-slider:before {
+    width: 15px;
+    height: 15px;
+    left: 2px;
+    top: 2px;
+  }
+
+  .medium-switch input:checked + .medium-switch-slider:before {
+    left: 18px;
+  }
+
+  .medium-phone {
+    display: none;
+  }
+
+  .medium-conditions {
+    margin: 10px 8px 0 8px;
+  }
+
+  .medium-conditions-inner {
+    padding: 8px 10px;
+    border-radius: 4px;
+    background: rgba(255,255,255,0.93);
+  }
+
+  .medium-conditions-text {
+    font-size: 10px;
+    line-height: 1.3;
+  }
+
+  .medium-conditions-title {
+    font-size: 11px;
+    margin-top: 4px;
+  }
+
+  .medium-conditions ul {
+    font-size: 9px;
+    padding-left: 10px;
+    margin: 2px 0 0 0;
+  }
+
+  .medium-bottom-line {
+    height: 2px;
+    top: 10px;
+  }
 }
