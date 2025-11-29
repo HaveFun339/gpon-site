@@ -138,7 +138,7 @@
 
 .input-img {
   flex: 1 1 680px;
-  background: url('/gpon-bg.jpg') center center/cover no-repeat;
+  background: url('/images/gpon-bg.jpg') center center/cover no-repeat;
   border-radius: 8px; /* inner right corner radius to match inset */
   min-height: 420px; /* ensure it visually matches form height */
 }

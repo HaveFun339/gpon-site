@@ -1,7 +1,7 @@
 ﻿
 .medium-section {
 
-  background: #181c23 url('./gpon-bg.jpg') center center/cover no-repeat;
+  background: #181c23 url('/images/gpon-bg.jpg') center center/cover no-repeat;
  
  
   box-sizing: border-box;
@@ -13,7 +13,7 @@
 
 }
 .medium-bg {
-   background: #181c23 url('./gpon-bg.jpg') center center/cover no-repeat;
+  background: #181c23 url('/images/gpon-bg.jpg') center center/cover no-repeat;
   width: 100%;
 padding-top: 60px;
 background-size: cover;
@@ -324,7 +324,7 @@ span{
   .medium-bg {
     padding-top: 20px;
     padding-bottom: 20px;
-    background-image: linear-gradient(180deg, rgba(24,28,35,0.98) 0%, rgba(24,28,35,0.98) 62%, rgba(255,255,255,1) 62%), url('./gpon-bg.jpg');
+    background-image: linear-gradient(180deg, rgba(24,28,35,0.98) 0%, rgba(24,28,35,0.98) 62%, rgba(255,255,255,1) 62%), url('/images/gpon-bg.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
