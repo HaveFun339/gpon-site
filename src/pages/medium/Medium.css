@@ -324,7 +324,7 @@ span{
   .medium-bg {
     padding-top: 20px;
     padding-bottom: 20px;
-    background-image: linear-gradient(180deg, rgba(24,28,35,0.98) 0%, rgba(24,28,35,0.98) 62%, rgba(255,255,255,1) 62%), url('/images/gpon-bg.jpg');
+   
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -472,7 +472,7 @@ span{
   }
 
   .medium-conditions {
-    margin: 24px 16px 0 16px;
+    /* margin: 24px 16px 0 16px; */
   }
 
   .medium-conditions-inner {
@@ -636,7 +636,7 @@ span{
   }
 
   .medium-conditions {
-    margin: 16px 12px 0 12px;
+    /* margin: 16px 12px 0 12px; */
   }
 
   .medium-conditions-inner {
@@ -674,6 +674,7 @@ span{
   .medium-conditions {
     margin-top: 0;
     background: transparent;
+    padding: 0 12px;
   }
 
   .medium-conditions-inner {
@@ -772,7 +773,8 @@ span{
   }
 
   .medium-conditions {
-    margin: 12px 10px 0 10px;
+    /* margin: 12px 10px 0 10px; */
+    padding: 0 12px;
   }
 
   .medium-conditions-inner {
@@ -889,7 +891,8 @@ span{
   }
 
   .medium-conditions {
-    margin: 10px 8px 0 8px;
+    /* margin: 10px 8px 0 8px; */
+padding: 0 12px;
   }
 
   .medium-conditions-inner {
@@ -911,7 +914,7 @@ span{
   .medium-conditions ul {
     font-size: 9px;
     padding-left: 10px;
-    margin: 2px 0 0 0;
+    /* margin: 2px 0 0 0; */
   }
 
   .medium-bottom-line {

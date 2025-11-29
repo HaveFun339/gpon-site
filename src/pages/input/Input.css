@@ -40,7 +40,7 @@
   display: flex;
   justify-content: space-between;
   align-items: stretch;
-  width: 1100px;
+  width: 1000px;
   max-width: 1100px;
   margin: 0;
   background: #fff;
@@ -188,6 +188,7 @@
   }
 
   .input-img {
+    display:none;
     min-height: 280px;
   }
 }
@@ -237,6 +238,7 @@
 
   .input-img {
     min-height: 240px;
+    display:none;
     border-radius: 0 0 10px 10px;
   }
 }
@@ -294,6 +296,7 @@
 
   .input-img {
     min-height: 200px;
+    display:none;
     border-radius: 0 0 8px 8px;
   }
 }
@@ -339,6 +342,7 @@
   }
 
   .input-img {
+    display: none;
     min-height: 180px;
     border-radius: 0 0 6px 6px;
   }
