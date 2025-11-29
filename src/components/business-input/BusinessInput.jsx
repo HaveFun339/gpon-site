@@ -128,9 +128,7 @@ export const BusinessInput = () => {
 
                 <div className="input-img" 
                  
-                     /* style={{ 
-                        backgroundImage: `url(${process.env.PUBLIC_URL}/path/to/business-image.jpg)`
-                     }} */
+                  
                 />
             </div>
         </section>

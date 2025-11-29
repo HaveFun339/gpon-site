@@ -31,21 +31,21 @@ export const Payment = () => {
             onClick={() => handlePaymentClick(paymentLinks.easypayOnline)}
             title="Перейти на сайт EasyPay"
           >
-            <img src="/public/easypay.png" alt="EasyPay" />
+            <img src="/easypay.png" alt="EasyPay" />
           </button>
           <button 
             className="payment-card" 
             onClick={() => handlePaymentClick(paymentLinks.monobankOnline)}
             title="Перейти на сайт Monobank"
           >
-            <img src="/public/monobank.png" alt="Monobank" />
+            <img src="/monobank.png" alt="Monobank" />
           </button>
           <button 
             className="payment-card" 
             onClick={() => handlePaymentClick(paymentLinks.privatbankOnline)}
             title="Перейти на сайт ПриватБанк"
           >
-            <img src="/public/privat.png" alt="ПриватБанк" />
+            <img src="/privat.png" alt="ПриватБанк" />
           </button>
         </div>
       </div>
@@ -59,21 +59,21 @@ export const Payment = () => {
             onClick={() => handlePaymentClick(paymentLinks.easypayTerminal)}
             title="Перейти на сайт EasyPay"
           >
-            <img src="/public/easypay.png" alt="EasyPay" />
+            <img src="/easypay.png" alt="EasyPay" />
           </button>
           <button 
             className="payment-card" 
             onClick={() => handlePaymentClick(paymentLinks.ibox)}
             title="Перейти на сайт IBOX"
           >
-            <img src="/public/ibox.png" alt="IBOX" />
+            <img src="/ibox.png" alt="IBOX" />
           </button>
           <button 
             className="payment-card" 
             onClick={() => handlePaymentClick(paymentLinks.privatbankTerminal)}
             title="Перейти на сайт ПриватБанк"
           >
-            <img src="/public/privat.png" alt="ПриватБанк" />
+            <img src="/privat.png" alt="ПриватБанк" />
           </button>
         </div>
       </div>
