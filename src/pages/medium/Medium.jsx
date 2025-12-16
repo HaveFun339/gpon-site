@@ -3,6 +3,7 @@ import "./Medium.css";
 import ConnectionFormSection from "../../components/connection-form-section/ConnectionFormSection.jsx";
 import  Mapa  from "../map/Mapa.jsx";
 import { Input } from "../input/Input.jsx";
+
 const TariffCard = ({
   name,
   speed,
@@ -14,9 +15,10 @@ const TariffCard = ({
   const [isIp, setIsIp] = useState(false);
 
   return (
+
     <div className="medium-card">
       <div className="medium-pad">
-     
+
         <div className="medium-card-header">
           <span className="medium-card-title">{name}</span>
           <span className="medium-card-discount">-50%</span>

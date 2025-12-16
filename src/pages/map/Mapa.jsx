@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useRef } from "react";
 import { Map, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -56,7 +56,7 @@ const Mapa = () => {
     if (!leafletMap) return;
     leafletMap.flyTo(coords, 16);
     // show a popup at the location
-    L.popup({ maxWidth: 300, color: 'black' })
+    L.popup({ maxWidth: 300 })
       .setLatLng(coords)
       .setContent(`<strong>${name}</strong>`)
       .openOn(leafletMap);
@@ -75,8 +75,8 @@ const Mapa = () => {
         maxZoom={20}
       >
         <TileLayer
-          url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
-          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
         />
         {streetMarkers.map((marker, idx) => (
           <Marker key={idx} position={marker.coords}>

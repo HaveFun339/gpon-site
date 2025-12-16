@@ -1,0 +1,144 @@
+.devices-section {
+  width: 100%;
+  padding: 48px 16px;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  background: #f8f9fb;
+}
+
+.devices-inner {
+  width: 1100px;
+  max-width: 100%;
+}
+
+.devices-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #181c23;
+  margin: 0 0 24px 0;
+  font-family: 'GothamPro-Medium', Arial, sans-serif;
+}
+
+.devices-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px;
+}
+
+.device-card {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 16px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  border: 1px solid transparent;
+  transition: transform 420ms cubic-bezier(.2,.9,.2,1), box-shadow 420ms ease, background 420ms ease, border-color 420ms ease;
+  will-change: transform, box-shadow;
+  cursor: default;
+}
+
+.device-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 8px;
+  background: linear-gradient(180deg,#ffffff,#f1f3f5);
+  border: 1px solid rgba(0,0,0,0.04);
+}
+
+.device-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.device-name {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #181c23;
+}
+
+.device-status {
+  margin: 4px 0 0 0;
+  font-size: 13px;
+  color: #666;
+}
+
+/* image specific styles */
+.device-img-wrap {
+  width: 120px;
+  height: 90px;
+  flex: 0 0 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.04);
+}
+
+.device-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 420ms cubic-bezier(.2,.9,.2,1);
+}
+
+.device-desc {
+  margin: 6px 0 0 0;
+  font-size: 14px;
+  color: #444;
+}
+
+.device-specs {
+  margin: 8px 0 0 0;
+}
+
+.device-specs ul {
+  margin: 0;
+  padding-left: 18px;
+  color: #444;
+  font-size: 13px;
+}
+
+.device-specs li {
+  margin-bottom: 4px;
+}
+
+/* status modifiers */
+.device-online .device-icon { box-shadow: 0 0 0 4px rgba(34,197,94,0.08) inset; }
+.device-offline .device-icon { filter: grayscale(1); opacity: 0.6; }
+.device-maintenance .device-icon { box-shadow: 0 0 0 4px rgba(245,158,11,0.06) inset; }
+
+@media (max-width: 600px) {
+  .devices-section { padding: 24px 12px; }
+  .devices-title { font-size: 22px; }
+}
+
+/* Hover / focus animations for cards */
+.device-card:hover,
+.device-card:focus-within {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06), 0 0 18px rgba(232,138,0,0.08);
+  background: #ffffff;
+  border-color: rgba(232,138,0,0.10);
+}
+
+.device-card:hover .device-img,
+.device-card:focus-within .device-img {
+  transform: scale(1.03);
+}
+
+.device-card:active {
+  transform: translateY(-2px) scale(0.997);
+}
+
+.device-card:focus-within {
+  outline: 2px solid rgba(232,138,0,0.12);
+  outline-offset: 3px;
+  transition: outline-color 420ms ease;
+}
