@@ -5,7 +5,6 @@ import { Input } from "./pages/input/Input.jsx";
 import { Service } from "./pages/service/Service.jsx";
 import { Payment } from "./pages/payment/Payment.jsx";
 import { Documents } from "./pages/documents/Documents.jsx";
-import Oblad from "./pages/oblad/Oblad.jsx";
 import Devices from "./pages/devices/Devices.jsx";
 
 
