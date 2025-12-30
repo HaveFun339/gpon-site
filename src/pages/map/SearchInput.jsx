@@ -4,9 +4,11 @@ import "./Map.css";
 const SearchInput = ({ markers, onSelect }) => {
   const [query, setQuery] = useState("");
 
-  const matches = markers.filter((m) =>
-    m.name.toLowerCase().includes(query.trim().toLowerCase())
-  );
+  const q = query.trim().toLowerCase();
+  const matches = (markers || []).filter((m) => {
+    const name = m && typeof m === 'object' ? m.name : m;
+    return name && name.toLowerCase().includes(q);
+  });
 
   const handleSelect = (coords, name) => {
     onSelect(coords, name);
@@ -28,15 +30,18 @@ const SearchInput = ({ markers, onSelect }) => {
       {query && (
         <div className="map-search-results">
           {matches.length ? (
-            matches.map((m, i) => (
-              <div
-                key={i}
-                onClick={() => handleSelect(m.coords, m.name)}
-                className="map-search-item"
-              >
-                {m.name}
-              </div>
-            ))
+            matches.map((m, i) => {
+              const displayName = (m && typeof m === 'object') ? m.name : m;
+              return (
+                <div
+                  key={i}
+                  onClick={() => handleSelect((m && m.coords) || null, displayName)}
+                  className="map-search-item"
+                >
+                  {displayName}
+                </div>
+              )
+            })
           ) : (
             <div className="map-search-item">Нічого не знайдено</div>
           )}

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./Input.css";
+import { send as emailjsSend } from '@emailjs/browser';
 
 
 const streets = [
@@ -72,6 +73,22 @@ export const Input = () => {
     house: "",
     flat: "",
   });
+  const [isQuick, setIsQuick] = useState(false);
+  
+  // Prefill from URL query params (e.g. /input?street=Юрія+Іллєнка&name=Ivan)
+  React.useEffect(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const pre = {};
+      if (params.get('name')) pre.name = params.get('name');
+      if (params.get('phone')) pre.phone = params.get('phone');
+      if (params.get('street')) pre.street = params.get('street');
+      if (params.get('fromPopup')) setIsQuick(true);
+      if (Object.keys(pre).length) setForm(f => ({ ...f, ...pre }));
+    } catch (e) {
+      // ignore
+    }
+  }, []);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -80,21 +97,148 @@ export const Input = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const requiredFields = [
-      "name",
-      "email",
-      "phone",
-      "street",
-      "house",
-      "flat",
-    ];
+    // If user came from popup (quick flow) require only name, phone, street
+    const requiredFields = isQuick
+      ? ["name", "phone", "street"]
+      : ["name", "email", "phone", "street", "house", "flat"];
+
     for (const field of requiredFields) {
-      if (!form[field].trim()) {
-        alert("Будь ласка, заповніть всі поля коректно!");
+      if (!form[field] || !form[field].toString().trim()) {
+        alert("Будь ласка, заповніть всі обов'язкові поля!");
         return;
       }
     }
-    alert("Заявка відправлена!");
+
+    // persist order locally (placeholder for real backend)
+    const saveLocal = () => {
+      try {
+        const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+        const id = `ORD-${Date.now()}`;
+        const order = {
+          id,
+          tariff: form.tariff,
+          iptv: form.iptv,
+          name: form.name,
+          email: form.email,
+          phone: form.phone,
+          street: form.street,
+          house: form.house,
+          flat: form.flat,
+          quick: !!isQuick,
+          createdAt: new Date().toISOString(),
+        };
+        orders.push(order);
+        localStorage.setItem('orders', JSON.stringify(orders));
+        return order;
+      } catch (err) {
+        return null;
+      }
+    };
+
+    const order = saveLocal();
+
+    // Send email via EmailJS. You must set your EmailJS `serviceId`, `templateId`, and `userId`.
+    // The template should accept variables used below (name, phone, email, street, house, flat, tariff, iptv, orderId, recipients)
+    // Try client-side EmailJS first (if configured via VITE variables), then serverless API, then mailto fallback
+    const mailFallback = (orderObj) => {
+      const to = import.meta.env.VITE_CONTACT_EMAILS || '';
+      const subject = encodeURIComponent(`Заявка на підключення ${orderObj ? orderObj.id : ''}`);
+      const bodyLines = [
+        `Ім'я: ${form.name}`,
+        `Телефон: ${form.phone}`,
+        `Email: ${form.email || ''}`,
+        `Вулиця: ${form.street}`,
+        `Будинок: ${form.house || ''}`,
+        `Квартира: ${form.flat || ''}`,
+        `Тариф: ${form.tariff}`,
+        `IPTV: ${form.iptv}`,
+        `Номер заявки: ${orderObj ? orderObj.id : ''}`,
+      ];
+      const body = encodeURIComponent(bodyLines.join('\n'));
+      try { navigator.clipboard && navigator.clipboard.writeText(bodyLines.join('\n')); } catch (e) {}
+      window.location.href = `mailto:${to}?subject=${subject}&body=${body}`;
+      alert('Автоматична відправка email не налаштована. Текст заявки скопійовано в буфер обміну і відкрито поштовий клієнт.');
+    };
+
+    const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+    const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+
+    const templateParams = {
+      name: form.name,
+      phone: form.phone,
+      email: form.email || '',
+      street: form.street,
+      house: form.house || '',
+      flat: form.flat || '',
+      tariff: form.tariff,
+      iptv: form.iptv,
+      orderId: order ? order.id : null,
+      recipients: import.meta.env.VITE_CONTACT_EMAILS || '',
+    };
+
+    if (serviceId && templateId && publicKey) {
+      emailjsSend(serviceId, templateId, templateParams, publicKey)
+        .then(() => {
+          alert(`Заявку прийнято. Номер заявки: ${order ? order.id : 'N/A'}`);
+          if (isQuick) setForm({ ...form, email: '', house: '', flat: '' });
+        })
+        .catch(() => {
+          // fallback to serverless then mailto
+          fetch('/api/send-order', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name: form.name,
+              phone: form.phone,
+              email: form.email || '',
+              street: form.street,
+              house: form.house || '',
+              flat: form.flat || '',
+              tariff: form.tariff,
+              iptv: form.iptv,
+              orderId: order ? order.id : null,
+            }),
+          }).then(async (res) => {
+            if (res.ok) {
+              alert(`Заявку прийнято. Номер заявки: ${order ? order.id : 'N/A'}`);
+              if (isQuick) setForm({ ...form, email: '', house: '', flat: '' });
+            } else {
+              mailFallback(order);
+            }
+          }).catch(() => {
+            mailFallback(order);
+          });
+        });
+      return;
+    }
+
+    // If EmailJS client not configured, fall back to serverless endpoint
+    fetch('/api/send-order', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: form.name,
+        phone: form.phone,
+        email: form.email || '',
+        street: form.street,
+        house: form.house || '',
+        flat: form.flat || '',
+        tariff: form.tariff,
+        iptv: form.iptv,
+        orderId: order ? order.id : null,
+      }),
+    }).then(async (res) => {
+      if (res.ok) {
+        alert(`Заявку прийнято. Номер заявки: ${order ? order.id : 'N/A'}`);
+        if (isQuick) setForm({ ...form, email: '', house: '', flat: '' });
+      } else {
+        // fallback
+        mailFallback(order);
+      }
+    }).catch(() => {
+      mailFallback(order);
+    });
   };
 
   return (
