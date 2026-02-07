@@ -1,7 +1,52 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Input.css";
-import { send as emailjsSend } from '@emailjs/browser';
+import { sendtoTelegram } from "../../api/send-order.js";
+import { useLocation } from 'react-router-dom';
 
+const EmailForm = () => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Log only the EmailForm inputs
+    console.log("EmailForm data:", { name, email, message });
+  };
+
+  return (
+    <form
+      className="email-form"
+      onSubmit={handleSubmit}
+      style={{ marginBottom: 16 }}
+    >
+      <input
+        name="name"
+        placeholder="Ім'я"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        className="input-field styled-input"
+      />
+      <input
+        name="email"
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        className="input-field styled-input"
+      />
+      <textarea
+        name="message"
+        placeholder="Повідомлення"
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
+        className="input-field styled-input"
+        rows={3}
+      />
+      <div style={{ display: "flex", gap: 8, marginTop: 8 }}></div>
+    </form>
+  );
+};
 
 const streets = [
   "Юрія Іллєнка",
@@ -14,7 +59,7 @@ const streets = [
   "Рене Декарта",
   "Червонозаводський",
   "Кулібіна",
-  "Берестейський", 
+  "Берестейський",
   "Стрийська",
   "Галаганівська",
   "Велика Васильківська",
@@ -62,7 +107,7 @@ const iptvTariffs = [
   { value: "Кіно+", label: "Кіно+" },
 ];
 
-export const Input = () => {
+export const Input = ({ value }) => {
   const [form, setForm] = useState({
     tariff: "GPON 100",
     iptv: "",
@@ -74,45 +119,42 @@ export const Input = () => {
     flat: "",
   });
   const [isQuick, setIsQuick] = useState(false);
-  
-  // Prefill from URL query params (e.g. /input?street=Юрія+Іллєнка&name=Ivan)
-  React.useEffect(() => {
-    try {
-      const params = new URLSearchParams(window.location.search);
-      const pre = {};
-      if (params.get('name')) pre.name = params.get('name');
-      if (params.get('phone')) pre.phone = params.get('phone');
-      if (params.get('street')) pre.street = params.get('street');
-      if (params.get('fromPopup')) setIsQuick(true);
-      if (Object.keys(pre).length) setForm(f => ({ ...f, ...pre }));
-    } catch (e) {
-      // ignore
+  const location = useLocation();
+
+  // On mount, read query params (from map popup) and prefill form
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const fromPopup = params.get('fromPopup');
+    if (fromPopup) {
+      const name = params.get('name') || '';
+      const phone = params.get('phone') || '';
+      const street = params.get('street') || '';
+      setForm(f => ({ ...f, name, phone, street }));
     }
-  }, []);
+  }, [location.search]);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  const sanitizePhone = (value) => {
+    if (!value) return "";
+    // remove all characters except digits and +
+    let v = value.replace(/[^0-9+]/g, "");
+    // remove any + that is not at the start
+    v = v.replace(/\+(?=.+\+)/g, "");
+    v = v.replace(/(?!^)\+/g, "");
+    // ensure only one leading +
+    if (v.indexOf('+') > 0) v = v.replace(/\+/g, '');
+    return v;
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // If user came from popup (quick flow) require only name, phone, street
-    const requiredFields = isQuick
-      ? ["name", "phone", "street"]
-      : ["name", "email", "phone", "street", "house", "flat"];
-
-    for (const field of requiredFields) {
-      if (!form[field] || !form[field].toString().trim()) {
-        alert("Будь ласка, заповніть всі обов'язкові поля!");
-        return;
-      }
-    }
-
-    // persist order locally (placeholder for real backend)
     const saveLocal = () => {
       try {
-        const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+        const orders = JSON.parse(localStorage.getItem("orders") || "[]");
         const id = `ORD-${Date.now()}`;
         const order = {
           id,
@@ -128,7 +170,7 @@ export const Input = () => {
           createdAt: new Date().toISOString(),
         };
         orders.push(order);
-        localStorage.setItem('orders', JSON.stringify(orders));
+        localStorage.setItem("orders", JSON.stringify(orders));
         return order;
       } catch (err) {
         return null;
@@ -136,111 +178,26 @@ export const Input = () => {
     };
 
     const order = saveLocal();
+    // log for debugging
+    console.log("Form submitted", form, "order", order);
 
-    // Send email via EmailJS. You must set your EmailJS `serviceId`, `templateId`, and `userId`.
-    // The template should accept variables used below (name, phone, email, street, house, flat, tariff, iptv, orderId, recipients)
-    // Try client-side EmailJS first (if configured via VITE variables), then serverless API, then mailto fallback
-    const mailFallback = (orderObj) => {
-      const to = import.meta.env.VITE_CONTACT_EMAILS || '';
-      const subject = encodeURIComponent(`Заявка на підключення ${orderObj ? orderObj.id : ''}`);
-      const bodyLines = [
-        `Ім'я: ${form.name}`,
-        `Телефон: ${form.phone}`,
-        `Email: ${form.email || ''}`,
-        `Вулиця: ${form.street}`,
-        `Будинок: ${form.house || ''}`,
-        `Квартира: ${form.flat || ''}`,
-        `Тариф: ${form.tariff}`,
-        `IPTV: ${form.iptv}`,
-        `Номер заявки: ${orderObj ? orderObj.id : ''}`,
-      ];
-      const body = encodeURIComponent(bodyLines.join('\n'));
-      try { navigator.clipboard && navigator.clipboard.writeText(bodyLines.join('\n')); } catch (e) {}
-      window.location.href = `mailto:${to}?subject=${subject}&body=${body}`;
-      alert('Автоматична відправка email не налаштована. Текст заявки скопійовано в буфер обміну і відкрито поштовий клієнт.');
-    };
-
-    const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
-    const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
-    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
-
-    const templateParams = {
-      name: form.name,
-      phone: form.phone,
-      email: form.email || '',
-      street: form.street,
-      house: form.house || '',
-      flat: form.flat || '',
-      tariff: form.tariff,
-      iptv: form.iptv,
-      orderId: order ? order.id : null,
-      recipients: import.meta.env.VITE_CONTACT_EMAILS || '',
-    };
-
-    if (serviceId && templateId && publicKey) {
-      emailjsSend(serviceId, templateId, templateParams, publicKey)
-        .then(() => {
-          alert(`Заявку прийнято. Номер заявки: ${order ? order.id : 'N/A'}`);
-          if (isQuick) setForm({ ...form, email: '', house: '', flat: '' });
-        })
-        .catch(() => {
-          // fallback to serverless then mailto
-          fetch('/api/send-order', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              name: form.name,
-              phone: form.phone,
-              email: form.email || '',
-              street: form.street,
-              house: form.house || '',
-              flat: form.flat || '',
-              tariff: form.tariff,
-              iptv: form.iptv,
-              orderId: order ? order.id : null,
-            }),
-          }).then(async (res) => {
-            if (res.ok) {
-              alert(`Заявку прийнято. Номер заявки: ${order ? order.id : 'N/A'}`);
-              if (isQuick) setForm({ ...form, email: '', house: '', flat: '' });
-            } else {
-              mailFallback(order);
-            }
-          }).catch(() => {
-            mailFallback(order);
-          });
-        });
-      return;
-    }
-
-    // If EmailJS client not configured, fall back to serverless endpoint
-    fetch('/api/send-order', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name: form.name,
-        phone: form.phone,
-        email: form.email || '',
-        street: form.street,
-        house: form.house || '',
-        flat: form.flat || '',
-        tariff: form.tariff,
-        iptv: form.iptv,
-        orderId: order ? order.id : null,
-      }),
-    }).then(async (res) => {
-      if (res.ok) {
-        alert(`Заявку прийнято. Номер заявки: ${order ? order.id : 'N/A'}`);
-        if (isQuick) setForm({ ...form, email: '', house: '', flat: '' });
-      } else {
-        // fallback
-        mailFallback(order);
-      }
-    }).catch(() => {
-      mailFallback(order);
+    // Send to Telegram
+    const telegramText = `<b>Нова заявка:</b>\n👤 <b>Ім'я:</b> ${form.name}\n📧 <b>Email:</b> ${form.email}\n☎️ <b>Телефон:</b> ${form.phone}\n🏠 <b>Адреса:</b> вул. ${form.street}, будинок ${form.house}, квартира ${form.flat}\n📱 <b>GPON тариф:</b> ${form.tariff}\n📺 <b>IPTV тариф:</b> ${form.iptv || "Не обрано"}`;
+    sendtoTelegram(telegramText);
+    setForm({
+      tariff: "GPON 100",
+      iptv: "",
+      name: "",
+      email: "",
+      phone: "",
+      street: "",
+      house: "",
+      flat: "",
     });
+    setIsQuick(false);
   };
 
+  // Component render
   return (
     <section className="input-section">
       <h1 className="input-title">
@@ -275,6 +232,7 @@ export const Input = () => {
           <hr className="input-hr" />
           <input
             type="text"
+            id="fromName"
             name="name"
             placeholder="Ім'я"
             value={form.name}
@@ -285,6 +243,7 @@ export const Input = () => {
           <hr className="input-hr" />
           <input
             type="email"
+            id="email"
             name="email"
             placeholder="Email"
             value={form.email}
@@ -295,11 +254,14 @@ export const Input = () => {
           <hr className="input-hr" />
           <input
             type="tel"
+            id="phone"
             name="phone"
-            placeholder="Телефон"
+            placeholder={value}
             value={form.phone}
+            inputMode="tel"
+            pattern="\+?[0-9]*"
             onChange={(e) => {
-              const val = e.target.value.replace(/[^0-9+\-\s()]/g, "");
+              const val = sanitizePhone(e.target.value);
               setForm({ ...form, phone: val });
             }}
             className="input-field styled-input"
@@ -307,6 +269,7 @@ export const Input = () => {
           />
           <hr className="input-hr" />
           <select
+            id="street"
             name="street"
             value={form.street}
             onChange={handleChange}
@@ -322,6 +285,7 @@ export const Input = () => {
           <div className="input-row">
             <input
               type="text"
+              id="house"
               name="house"
               placeholder="№ буд."
               value={form.house}
@@ -331,6 +295,7 @@ export const Input = () => {
             />
             <input
               type="text"
+              id="flat"
               name="flat"
               placeholder="№ кв."
               value={form.flat}
@@ -339,9 +304,11 @@ export const Input = () => {
               required
             />
           </div>
-          <button type="submit" className="input-btn">
-            Підключити
-          </button>
+          <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+            <button type="submit" className="input-btn">
+              Відправити
+            </button>
+          </div>
         </form>
         <div className="input-img" />
       </div>

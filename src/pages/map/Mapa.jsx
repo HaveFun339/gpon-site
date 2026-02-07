@@ -3,6 +3,7 @@ import { Map, TileLayer, Marker, Popup } from "react-leaflet";
 import { useNavigate } from 'react-router-dom'
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import { sendtoTelegram } from "../../api/send-order.js";
 import SearchInput from "./SearchInput";
 import "./Map.css";
 import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
@@ -67,7 +68,7 @@ const streetMarkers = [
   "Дністровська",
 ];
 
-const Mapa = () => {
+const Mapa = ({value}) => {
   const mapRef = useRef(null);
   const navigate = useNavigate();
   const [popupForm, setPopupForm] = useState({ name: '', phone: '' });
@@ -100,6 +101,15 @@ const Mapa = () => {
 
   const handlePopupInput = (e) => {
     const { name, value } = e.target;
+    if (name === 'phone') {
+      // allow only + and digits, + only at start
+      let v = String(value || '').replace(/[^0-9+]/g, '');
+      v = v.replace(/\+(?=.+\+)/g, '');
+      v = v.replace(/(?!^)\+/g, '');
+      if (v.indexOf('+') > 0) v = v.replace(/\+/g, '');
+      setPopupForm(prev => ({ ...prev, [name]: v }));
+      return;
+    }
     setPopupForm(prev => ({ ...prev, [name]: value }));
   };
 
@@ -237,10 +247,17 @@ const Mapa = () => {
                   <strong>{marker.name}</strong>
                   <form onSubmit={(e) => handleSubmitPopup(e, marker.name)} style={{marginTop:8}}>
                     <input name="name" placeholder="Ім'я" value={popupForm.name} onChange={handlePopupInput} style={{width:'100%',marginBottom:6,padding:6}} />
-                    <input name="phone" placeholder="Телефон" value={popupForm.phone} onChange={handlePopupInput} style={{width:'100%',marginBottom:6,padding:6}} />
+                    <input name="phone" placeholder={value} value={popupForm.phone} onChange={handlePopupInput} style={{width:'100%',marginBottom:6,padding:6}} />
                     <div style={{display:'flex',gap:8}}>
-                      <button type="submit" style={{flex:1,padding:'8px 10px'}}>Подати заявку</button>
-                      <button type="button" onClick={() => navigate(`/input?street=${encodeURIComponent(marker.name)}`)} style={{flex:1,padding:'8px 10px'}}>Відкрити форму</button>
+                      <button type="button" onClick={() => sendtoTelegram(`Name: ${popupForm.name}, Phone: ${popupForm.phone}`)} className="input-btn">Відправити!</button>
+                      <button type="button" onClick={() => {
+                        const params = new URLSearchParams();
+                        if (popupForm.name) params.set('name', popupForm.name);
+                        if (popupForm.phone) params.set('phone', popupForm.phone);
+                        if (marker.name) params.set('street', marker.name);
+                        params.set('fromPopup', '1');
+                        navigate(`/input?${params.toString()}`);
+                      }} style={{flex:1,padding:'8px 10px'}}>Відкрити форму</button>
                     </div>
                   </form>
                 </div>

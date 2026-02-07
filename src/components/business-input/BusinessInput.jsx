@@ -33,19 +33,18 @@ export const BusinessInput = () => {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
+    const sanitizePhone = (value) => {
+        if (!value) return "";
+        let v = String(value).replace(/[^0-9+]/g, '');
+        v = v.replace(/\+(?=.+\+)/g, '');
+        v = v.replace(/(?!^)\+/g, '');
+        if (v.indexOf('+') > 0) v = v.replace(/\+/g, '');
+        return v;
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        const requiredFields = ["name", "email", "phone", "street", "house", "office"];
-        for (const field of requiredFields) {
-            if (!form[field].trim()) {
-                alert("Будь ласка, заповніть всі поля коректно!");
-                return;
-            }
-        }
-        
-        console.log("Бізнес-заявка відправлена:", form);
-        alert("Бізнес-заявка відправлена!");
     };
 
     return (
@@ -92,7 +91,7 @@ export const BusinessInput = () => {
                     <hr className="input-hr" />
                     <input type="email" name="email" placeholder="Email" value={form.email} onChange={handleChange} className="input-field styled-input" required />
                     <hr className="input-hr" />
-                    <input type="tel" name="phone" placeholder="Телефон" value={form.phone} onChange={handleChange} className="input-field styled-input" required />
+                    <input type="tel" name="phone" placeholder="Телефон" value={form.phone} onChange={(e)=> setForm({...form, phone: sanitizePhone(e.target.value)})} className="input-field styled-input" required />
                     
                     <hr className="input-hr" />
                 

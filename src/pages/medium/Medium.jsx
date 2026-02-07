@@ -21,7 +21,7 @@ const TariffCard = ({
 
         <div className="medium-card-header">
           <span className="medium-card-title">{name}</span>
-          <span className="medium-card-discount">-50%</span>
+          <span className="medium-card-discount"></span>
         </div>
         <div className="medium-card-divider" />
         <div className="medium-card-row">
@@ -49,7 +49,7 @@ const TariffCard = ({
         <div className="medium-card-row">
           <span>Підключення</span>
           <span>
-            <s>750</s> <span className="medium-card-accent">375 ₴</span>
+            <s></s> <span className="medium-card-accent">1000 ₴</span>
           </span>
         </div>
         <div className="medium-card-price">
@@ -62,11 +62,14 @@ const TariffCard = ({
       <button className="medium-card-btn" type="button">
         Підключити
       </button>
+ 
     </div>
   );
 };
 
-export const Medium = () => (
+export const Medium = () => {
+   const [value, setValue] = useState(`Телефон`);
+   return (
   <section className="medium-section">
     <div className="medium-bg">
       <h1 className="medium-title">ІНТЕРНЕТ БЕЗ СВІТЛА*</h1>
@@ -74,18 +77,18 @@ export const Medium = () => (
         <TariffCard
           name="GPON 100"
           speed="100 Мбіт/с"
-          oldPrice="250"
-          currentPrice="125 ₴"
-          monthlyPrice="125 грн/міс**"
-          monthlyPriceIp="155 грн/міс**"
+          oldPrice=""
+          currentPrice="300 ₴"
+          monthlyPrice="300 грн/міс**"
+          monthlyPriceIp="330 грн/міс**"
         />
         <TariffCard
           name="GPON 1000"
           speed="1000 Мбіт/с"
-          oldPrice="350"
-          currentPrice="175 ₴"
-          monthlyPrice="175 грн/міс**"
-          monthlyPriceIp="205 грн/міс**"
+          oldPrice=""
+          currentPrice="400 ₴"
+          monthlyPrice="400  грн/міс**"
+          monthlyPriceIp="430 грн/міс**"
         />
       </div>
       <div className="medium-bottom-line" />
@@ -138,10 +141,11 @@ export const Medium = () => (
     <div className="medium-phone">
       <span className="medium-phone-icon" />
     </div>
-    <Mapa/>
+    
+    <Mapa value={value} />
     {/* <ConnectionFormSection /> */}
-    <Input/>
-  </section>
-);
+    <Input value={value} />
+  </section>)
+};
 
 export default Medium;
