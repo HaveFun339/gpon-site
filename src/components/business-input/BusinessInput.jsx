@@ -1,5 +1,6 @@
 
 import React, { useState } from "react";
+import { sendtoTelegram } from "../../api/send-order.js";
 // import from "./input.css";
 
 
@@ -45,6 +46,47 @@ export const BusinessInput = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
+        const saveLocal = () => {
+            try {
+                const orders = JSON.parse(localStorage.getItem("orders") || "[]");
+                const id = `ORD-${Date.now()}`;
+                const order = {
+                    id,
+                    tariff: form.tariff,
+                    iptv: form.iptv,
+                    name: form.name,
+                    email: form.email,
+                    phone: form.phone,
+                    street: form.street,
+                    house: form.house,
+                    office: form.office,
+                    createdAt: new Date().toISOString(),
+                };
+                orders.push(order);
+                localStorage.setItem("orders", JSON.stringify(orders));
+                return order;
+            } catch (err) {
+                return null;
+            }
+        };
+
+        const order = saveLocal();
+        console.log("Form submitted", form, "order", order);
+
+        // Send to Telegram
+        const telegramText = `<b>Нова бізнес-заявка:</b>\n👤 <b>Ім'я:</b> ${form.name}\n📧 <b>Email:</b> ${form.email}\n☎️ <b>Телефон:</b> ${form.phone}\n🏢 <b>Адреса:</b> вул. ${form.street}, будинок ${form.house}, офіс ${form.office}\n📱 <b>Biz тариф:</b> ${form.tariff}\n📺 <b>IPTV тариф:</b> ${form.iptv || "Не обрано"}`;
+        sendtoTelegram(telegramText);
+        
+        setForm({
+            tariff: bizTariffs[0].value,
+            iptv: "",
+            name: "",
+            email: "",
+            phone: "",
+            street: "",
+            house: "",
+            office: "",
+        });
     };
 
     return (
